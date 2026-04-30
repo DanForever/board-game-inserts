@@ -81,8 +81,8 @@ data =
 			],
 			[ BOX_COMPONENT,
 				[ // Score token
-					[ CMP_COMPARTMENT_SIZE_XYZ,  [ 15.65, 15.65, 5 ] ],
-					[ POSITION_XY, [4,42+13+8+4.5] ],
+					[ CMP_COMPARTMENT_SIZE_XYZ,  [ 16, 16, 5 ] ],
+					[ POSITION_XY, [5.5,42+13+8+4.5] ],
 					[ CMP_SHAPE, ROUND ],
 					[ CMP_SHAPE_VERTICAL_B, t ],
 					[ CMP_CUTOUT_SIDES_4B, [ f, f, t, t ] ],
@@ -93,7 +93,7 @@ data =
 			[ BOX_COMPONENT,
 				[ // Coins
 					[ CMP_COMPARTMENT_SIZE_XYZ,  [ 20.45, 20.45, 2*4 ] ],
-					[ POSITION_XY, [30,42+13+8+2] ],
+					[ POSITION_XY, [31.5,42+13+8+2] ],
 					[ CMP_SHAPE, ROUND ],
 					[ CMP_SHAPE_VERTICAL_B, t ],
 					[ CMP_CUTOUT_SIDES_4B, [ f, f, t, t ] ],
@@ -127,7 +127,8 @@ data =
 					[ CMP_COMPARTMENT_SIZE_XYZ,  [ 57, 14.8, 2 ] ],
 					[ POSITION_XY, [CENTER,42+13+15+21+17] ],
 					[ CMP_SHAPE_VERTICAL_B, t ],
-					[ CMP_CUTOUT_SIDES_4B, [ t, f, f, f ] ]
+					[ CMP_CUTOUT_SIDES_4B, [ t, f, f, f ] ],
+					[ CMP_CUTOUT_DEPTH_PCT, 75 ]
 				]
 			],
 		]
