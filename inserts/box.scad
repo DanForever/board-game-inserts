@@ -34,6 +34,54 @@ module magnet_slot()
 	}
 }
 
+module multi_magnet_slot(internal_volume = [1,1,1], num_slots = 1)
+{
+	originalX = internal_volume.x / 2;
+	spacing = internal_volume.x / (num_slots + 1);
+	leftmostX = -originalX;
+	
+	for(i = [0:num_slots-1])
+	{
+		translate([leftmostX+spacing*(i+1),0,0])
+		magnet_slot();
+	}
+}
+
+module box_magnet_slot(internal_volume = [1,1,1], num_slots = 1, enable_floor = true)
+{
+	outer_volume = calc_outer_volume(internal_volume);
+	
+	translation =
+	[
+		0,
+		outer_volume.y/2-back_wall_width/2,
+		outer_volume.z/2-magnet_diameter/2-(enable_floor? 0 : wall_width/2)
+	];
+	
+	
+	difference()
+	{
+		children();
+		
+		translate(translation)
+		#multi_magnet_slot(internal_volume, num_slots);
+		//magnet_slot();
+	}
+}
+
+module lid_magnet_slot(internal_volume = [1, 1, 1], num_slots = 1)
+{
+	lid_depth = calc_lid_depth(internal_volume);
+	
+	distance_from_edge = 0.3;
+	magnet_slot_y = lid_depth/2 - (magnet_depth*magnet_slot_tolerance)/2 - distance_from_edge;
+	
+	//translate([0,lid_depth/2-magnet_depth/2-0.6, magnet_diameter/2+0.1])
+	translate([0,magnet_slot_y, magnet_diameter/2+0.1])
+	multi_magnet_slot(internal_volume, num_slots);
+	//magnet_slot();
+}
+
 module internal_volume(internal_volume = [1,1,1], enable_floor = true)
 {
 	dimensions =
@@ -80,26 +128,6 @@ module cutout_internals(internal_volume = [1,1,1], enable_floor = true)
 		children();
 		
 		internal_volume(internal_volume, enable_floor);
-	}
-}
-
-module box_magnet_slot(internal_volume = [1,1,1], enable_floor = true)
-{
-	outer_volume = calc_outer_volume(internal_volume);
-	
-	translation =
-	[
-		0,
-		outer_volume.y/2-back_wall_width/2,
-		outer_volume.z/2-magnet_diameter/2-(enable_floor? 0 : wall_width/2)
-	];
-	
-	difference()
-	{
-		children();
-		
-		translate(translation)
-		#magnet_slot();
 	}
 }
 
@@ -175,7 +203,7 @@ module cutout_lid(internal_volume = [1,1,1], enable_floor = true)
 	}
 }
 
-module box( internal_volume = [1, 1, 1], enable_fillet = true, enable_floor = true )
+module box(internal_volume = [1, 1, 1], enable_fillet = true, enable_floor = true, num_slots = 1)
 {
 	outer_volume = calc_outer_volume(internal_volume, enable_floor);
 	
@@ -183,7 +211,7 @@ module box( internal_volume = [1, 1, 1], enable_fillet = true, enable_floor = tr
 	
 	translate(floor_translation)
 	cutout_lid(internal_volume, enable_floor)
-	box_magnet_slot(internal_volume, enable_floor)
+	box_magnet_slot(internal_volume, num_slots, enable_floor)
 	union()
 	{
 		if(enable_fillet) fillet(internal_volume);
@@ -193,13 +221,7 @@ module box( internal_volume = [1, 1, 1], enable_fillet = true, enable_floor = tr
 	}
 }
 
-module lid_magnet()
-{
-	rotate([90,0,0])
-	cylinder(magnet_depth, d=magnet_diameter, $fn=30);
-}
-
-module lid(internal_volume = [1, 1, 1])
+module lid(internal_volume = [1, 1, 1], num_slots = 1)
 {
 	outer_volume = calc_outer_volume(internal_volume);
 	
@@ -229,32 +251,32 @@ module lid(internal_volume = [1, 1, 1])
 		linear_extrude(lid_depth, center = true)
 		polygon([[x1 - x_centre_offset, y1], [x2 - x_centre_offset,y2], [x3 - x_centre_offset,y3], [x4 - x_centre_offset,y4]]);
 		
-		translate([0,lid_depth/2-magnet_depth/2-0.6, magnet_diameter/2+0.1])
-		#magnet_slot();
+		//translate([0,lid_depth/2-magnet_depth/2-0.6, magnet_diameter/2+0.1])
+		#lid_magnet_slot(internal_volume, num_slots);
+		//translate([0,lid_depth/2-magnet_depth/2-0.6, magnet_diameter/2+0.1])
+		//magnet_slot();
 	}
 }
 
-module neighbouring_lid(internal_volume = [1, 1, 1])
+module neighbouring_lid(internal_volume = [1, 1, 1], num_slots = 1)
 {
 	outer_volume = calc_outer_volume(internal_volume);
 	
 	translate([outer_volume.x + wall_width,0, -outer_volume.z/2])
-	lid(internal_volume);
+	lid(internal_volume, num_slots);
 }
 
-module inplace_lid(internal_volume = [1, 1, 1])
+module inplace_lid(internal_volume = [1, 1, 1], enable_floor = true, num_slots = 1)
 {
-	translate([0, -back_wall_width/2, internal_volume.z/2])
-	lid(internal_volume);
+	translate([0, -back_wall_width/2, internal_volume.z/2 + (enable_floor? 0 : -wall_width)])
+	lid(internal_volume, num_slots);
 }
 
-*box([60,126,20], enable_fillet = false, enable_floor = false);
+*box([60,126,20], enable_fillet = false, enable_floor = false, num_slots = 3);
 
-*neighbouring_lid([60,126,20]);
+*neighbouring_lid([60,126,20],  num_slots = 2);
 
 color("lightblue")
-*inplace_lid([60,126,20]);
+*inplace_lid([60,126,20], enable_floor = false, num_slots = 3);
 
 //fillet();
-
-//lid_magnet();
