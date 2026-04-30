@@ -1,0 +1,32 @@
+Blackout piece demensions:
+
+cube: 8mm
+
+score counter: 15mm diametre
+  - diameter: 15mm
+  - thickness: 4.17mm
+
+house:
+  - width: 13.65mm
+  - height: 11.86mm
+  - depth: 10.1mm
+
+value 1 coin:
+  - diameter: 20mm
+  - thickness: 1.92mm
+
+truck token:
+  - width: 19.63mm
+  - height: 16mm
+  - thickness: 1.9mm
+
+hand limit token:
+  - width: 15mm
+  - height: 15mm
+  - thickness: 1.9mm
+
+card slot blocker token:
+  - width: 56.5mm
+  - height: 14.6mm
+  - thickness: 1.9mm
+  
