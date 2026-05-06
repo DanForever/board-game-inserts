@@ -29,4 +29,15 @@ card slot blocker token:
   - width: 56.5mm
   - height: 14.6mm
   - thickness: 1.9mm
-  
+
+scout tile width:
+  - 22.5mm (square)
+  - thickness: 1.9mm
+  - thickness (stack of 5): 9.6
+  - thickness (stack of 10): 19.3
+
+remaining box space in insert (after playerboxes and card box):
+110mm x 116
+
+height of internal card insert:
+46mm
