@@ -252,18 +252,32 @@ module lid(internal_volume = [1, 1, 1], num_slots = 1)
 		polygon([[x1 - x_centre_offset, y1], [x2 - x_centre_offset,y2], [x3 - x_centre_offset,y3], [x4 - x_centre_offset,y4]]);
 		
 		//translate([0,lid_depth/2-magnet_depth/2-0.6, magnet_diameter/2+0.1])
-		#lid_magnet_slot(internal_volume, num_slots);
+		lid_magnet_slot(internal_volume, num_slots);
 		//translate([0,lid_depth/2-magnet_depth/2-0.6, magnet_diameter/2+0.1])
 		//magnet_slot();
 	}
+	
 }
 
-module neighbouring_lid(internal_volume = [1, 1, 1], num_slots = 1)
+module lid_with_label(label, internal_volume = [1, 1, 1], num_slots = 1)
+{
+	difference()
+	{
+		lid(internal_volume, num_slots);
+		
+		translate([0,0,wall_width/6*7])
+		linear_extrude(wall_width, center = true)
+		text(label, halign="center", valign="center");
+	}
+}
+
+module neighbouring_lid(internal_volume = [1, 1, 1], num_slots = 1, label = undef)
 {
 	outer_volume = calc_outer_volume(internal_volume);
 	
 	translate([outer_volume.x + wall_width,0, -outer_volume.z/2])
-	lid(internal_volume, num_slots);
+	if(label == undef) lid(internal_volume, num_slots); else lid_with_label(label, internal_volume, num_slots);
+	
 }
 
 module inplace_lid(internal_volume = [1, 1, 1], enable_floor = true, num_slots = 1)
@@ -274,7 +288,7 @@ module inplace_lid(internal_volume = [1, 1, 1], enable_floor = true, num_slots =
 
 *box([60,126,20], enable_fillet = false, enable_floor = false, num_slots = 3);
 
-*neighbouring_lid([60,126,20],  num_slots = 2);
+*neighbouring_lid([60,126,20],  num_slots = 2, label = "Money");
 
 color("lightblue")
 *inplace_lid([60,126,20], enable_floor = false, num_slots = 3);
